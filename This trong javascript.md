@@ -30,30 +30,30 @@ fn.call(obj);  // -> { value: 5 }
 fn.apply(obj); // -> { value: 5 }
 ```
 
-Để rõ ràng hơn nữa mời bạn hay xem ví dụ dưới đây:
-
+Để rõ ràng hơn nữa mời bạn hãy thử làm 1 ví dụ "Click vào button và sẽ gọi tới hàm showName". Theo lý thuyết thì sẽ tạo ra event click cho button rồi gọi tới hàm showName như một callback là xong phải không?
 ```javascript
 const person = {
   firstName: 'Dao',
-  lastName: 'Hoang'
+  lastName: 'Hoang',
   showName: function() {
     console.log(this.firstName + ' ' + this.lastName);
   }
 }
 
-person.showName(); // -> Dao Hoang
+$('button').click(person.showName); // -> undifined undifined
 ```
-`this` trong trường hợp trên sẽ là object person. Cùng làm ví dụ phức tạp hơn 1 chút đó là: "Click vào button và sẽ gọi tới hàm showName", theo lý thuyết thì sẽ tạo ra event click cho button rồi gọi tới hàm showName là xong phải không?
+Tại sao kết quả lại ra là undifined? Vì `this` trong trường hợp này sẽ là button, nó sẽ không có  firstName và lastName. Vậy thì làm sao để in ra được, ta có thể dựa vào kiến thức trên: "Nếu `apply`, `call` or `bind` được gọi/tạo mới, `this` bên trong function là object được truyền vào là 1 đối số (argument)".
 ```javascript
 const person = {
   firstName: 'Dao',
-  lastName: 'Hoang'
+  lastName: 'Hoang',
   showName: function() {
     console.log(this.firstName + ' ' + this.lastName);
   }
 }
 
-$('button').click(person.showName);
+// person là đối số.
+$('button').click(person.showName.bind(person)); // -> Dao Hoang
 ```
 
 
