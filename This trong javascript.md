@@ -42,7 +42,7 @@ const person = {
 
 $('button').click(person.showName); // -> undifined undifined
 ```
-Tại sao kết quả lại ra là undifined? Vì `this` trong trường hợp này sẽ là button, nó sẽ không có  firstName và lastName. Vậy thì làm sao để in ra được, ta có thể dựa vào kiến thức trên: "Nếu `apply`, `call` or `bind` được gọi/tạo mới, `this` bên trong function là object được truyền vào là 1 đối số (argument)".
+Tại sao kết quả lại ra là undifined? Vì `this` trong trường hợp này sẽ là button, nó sẽ không có firstName và lastName. Vậy thì làm sao để in ra được, ta có thể dùng bind().
 ```javascript
 const person = {
   firstName: 'Dao',
@@ -52,7 +52,7 @@ const person = {
   }
 }
 
-// person là đối số.
+// `this` trong trường hợp này sẽ là person.
 $('button').click(person.showName.bind(person)); // -> Dao Hoang
 ```
 
