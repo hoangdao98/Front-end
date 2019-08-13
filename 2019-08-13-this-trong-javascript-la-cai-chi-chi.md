@@ -9,6 +9,8 @@ categories:
 Không có lời giải thích đơn giản nào cho `this`, nó là một trong những khái niệm làm cho kha khá "đép" phải dức đầu 😥. Hiểu sương sương **_`this` nó dùng để trỏ tới chính object gọi hàm đó_**. Vậy là xong, kết thúc bài ở đây 😬😬😬.
 
 ### Rules của this.
+Để hiểu sâu hơn về `this` thì ta cần nắm chắc các rules của nó và dưới đây là những gì mình tìm được.
+
 1. Nếu dùng từ khóa `new` để gọi function, `this` bên trong function sẽ là một object hoàn toàn mới.
 ```javascript
 function personName() {
