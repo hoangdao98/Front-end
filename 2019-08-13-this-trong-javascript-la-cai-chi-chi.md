@@ -6,7 +6,7 @@ categories:
 ---
 
 # This trong javascript là cái chi chi?
-Không có lời giải thích đơn giản nào cho `this`, nó là một trong những khái niệm làm cho kha khá "đép" phải dức đầu 😥. Hiểu sương sương **_`this` nó dùng để trỏ tới chính object gọi hàm đó_**. Vậy là xong, kết thúc bài ở đây 😬😬😬. Em đùa đấy, cùng em tìm hiểu tiếp nhé.
+Không có lời giải thích đơn giản nào cho `this`, nó là một trong những khái niệm làm cho kha khá "đép" phải dức đầu 😥. Hiểu sương sương **_`this` nó dùng để trỏ tới chính object gọi hàm đó_**. Vậy là xong, kết thúc bài ở đây 😬😬😬.
 
 ### Rules của this.
 1. Nếu dùng từ khóa `new` để gọi function, `this` bên trong function sẽ là một object hoàn toàn mới.
