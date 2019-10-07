@@ -13,7 +13,7 @@ Angular bao gồm những thành phần sau:
 *   **Component:** Đây là thành phần cơ bản của Angular dùng để quản lý HTML views.
 *   **Modules:** Module là nơi để khai báo các thành phần mà ta sẽ sử dụng như components, directives, services... Mỗi phần trong module sẽ thực hiện một nhiệm vụ.
 *   **Templates:** Nó đại diện cho phần views của một Angular application.
-*   **Service:** Nơi thường dùng để gọi API và có thể chia sẻ trên toàn bộ ứng dụng.
+*   **Service:** Nó là nơi giúp ta tái sự dụng code vì nó có thể chia sẻ trên toàn bộ ứng dụng với cơ chế là dependence injection. 
 *   **Metadata:** Có thể sử dụng để thêm nhiều dữ liệu vào một Angular class. vd như @NgModule, @Directive, etc.
 # Component trong Agular
 Component trong angular là một thành phần cơ bản, dùng để quản lý phần views của một application. Mỗi component luôn có 1 template (không có cái thứ 2).
@@ -119,7 +119,7 @@ Ngoài ra không chỉ có 3 options trên mà ta còn có các options như pro
 # Metadata
 Metadata sử dụng để cấu hình hành vi của các các lớp. Muốn Angular hiểu được nó thì ta phải cần phải khai báo.
 
-Ví dụ: Khi muốn khai báo là một component hoặc một module
+**Class decarators: @NgModule, @Component**
 ```typescript
 import { NgModule, Component } from '@angular/core';
 
@@ -138,6 +138,51 @@ import { NgModule, Component } from '@angular/core';
 export class MyModule {
 }
 ```
+**Property decarators: Được sử dụng cho thuộc tính bên trong class như @Input, @Output ...**
+```typescript
+import { Component, Input } from '@angular/core';
+
+@Component({
+    selector: 'my-component',
+    template: '<div>Property decorator</div>'
+})
+
+export class MyComponent {
+    @Input()
+    @Output()
+    title: string;
+}
+```
+**Method decorators: Được sử dụng cho các method bên trong class @HostListener**
+```typescript
+import { Component, HostListener } from '@angular/core';
+
+@Component({
+    selector: 'my-component',
+    template: '<div>Method decorator</div>'
+})
+export class MyComponent {
+    @HostListener('click', ['$event'])
+    onHostClick(event: Event) {
+        // clicked, `event` available
+    }
+}
+```
+**Parameter decorators: Được sử dụng cho các prameter bên trong contructor như @Inject**
+```typescript
+import { Component, Inject } from '@angular/core';
+import { MyService } from './my-service';
+
+@Component({
+    selector: 'my-component',
+    template: '<div>Parameter decorator</div>'
+})
+export class MyComponent {
+    constructor(@Inject(MyService) myService) {
+        console.log(myService); // MyService
+    }
+}
+```
 # Lifecycle hook trong Angular.
 Angular application sẽ phải trải qua 1 lifecycle xuyên suốt từ đầu đến khi kết thúc ứng dụng.
 ![lifecycle](https://github.com/sudheerj/angular-interview-questions/raw/master/images/lifecycle.png)
@@ -147,9 +192,60 @@ Angular application sẽ phải trải qua 1 lifecycle xuyên suốt từ đầu
 *   ngOnInit: Chỉ chạy lần đầu tiên ngay khi component được khởi tạo. Được gọi sau ngOnChanges.
 *   ngDoCheck: Method này sử dụng để phát hiện và xử lý các thay đổi mà Angular không thể hoặc không phát hiện ra. Quá trình này còn được gọi là change dectection. Change detection là cơ chế của Angular để kiểm tra sự thay đổi của bất kỳ các thuộc tính, event ...  Được gọi ngay sau ngOnChanges và ngOnInit
 *   ngAfterContentInit: Được gọi khi Angular bind dữ liệu xong. Chỉ được gọi duy nhất 1 lần sau lần gọi đầu tiên của ngDoCheck
-*   ngAfterContentChecked: Được gọi ngay sau khi change detector default đã kiểm tra content (Hơi trìu tượng, mình sẽ bổ sung ví dụ sau)
+*   ngAfterContentChecked: Được gọi ngay sau khi change detector default đã kiểm tra content (Mình chưa hiểu rõ phần này)
 *   ngAfterViewInit: Được gọi khi toàn bộ component view được khởi tạo thành công.
 *   ngAfterViewChecked: Được chạy mỗi lần view trong component được kiểm tra bởi Change Detection trong Angular.
 *   ngOnDestroy: Được gọi ngay sau khi destroy 1 component.
 
-# Đang update
+# Dependency Injection trong Angular
+Dependency injection (DI), là một desgin parttern quan trọng trong một ứng dụng, nó giúp ta `inject` các đối tượng dependency bên ngoài thay vì mình phải tự tạo ra chúng. Angular đã xây dựng một framework dependency riêng, và ta không thể dựng một ứng dụng Angular mà không có nó.
+
+Trong Angular CLI, DI có 3 phần cơ bản: 
+![DI](https://viblo.asia/uploads/d9b69c02-9869-4ac4-a1e4-ee5081dad62c.png)
+*   Injector: Một đối tượng chứa các API để chúng ta tạo các instance của dependecies.
+*   Provider: Nơi khai báo cho Injector biết để tạo ra dependency.
+*   Object: Là một object của kiểu dữ liệu cần khởi tạo
+
+## DI token là cái gì?
+Đăng ký 1 provider
+```typescript
+import { NgModule } from '@angular/core';
+import { AuthService } from './auth.service';
+
+@NgModule({
+  providers: [AuthService],
+})
+class ExampleModule {}
+```
+Ví dụ trên là cách viết tắt, chi tiết thì nó sẽ là như này.
+```typescript
+import { NgModule } from '@angular/core';
+import { AuthService } from './auth.service';
+
+@NgModule({
+  providers: [
+     { 
+        provide: AuthService,
+        useClass: AuthService
+     }
+  ],
+})
+class ExampleModule {}
+```
+Ta sẽ inject dependencies vào component
+
+```typescript
+import { Component } from '@angular/core';
+import { AuthSerivce } from '...'
+
+@Component({
+   selector: 'auth-login',
+   template: 'auth-login.component.html'
+});
+
+export class AuthLoginComponent {
+   // Khởi tạo dependency 
+   constructor(private authSerivce: AuthService);
+}
+```
+Dependency được đăng ký trong 1 tập Providers sử dụng một tập token-provider. Component inject các các depencenies vào trong hàm khởi tạo sử dụng `token` (token chính là provide trong object). Injector sẽ tìm kiếm một provider trong tập providers sử dụng token. Nếu như được tìm thấy nó sẽ khởi tạo và inject vào trong component. Còn nếu không tìm thấy thì nó sẽ tiếp tục request tới injector của component cha, và cứ tiếp tục như vậy cho đến khi thấy provider. Nếu không tìm thấy provider cho dependency, sẽ có một lỗi xảy ra `"EXCEPTION: Error in Component class – inline template caused by No provider for Service!".`
