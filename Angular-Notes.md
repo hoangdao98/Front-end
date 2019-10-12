@@ -111,9 +111,9 @@ import { AppComponent }  from './app.component';
 export class AppModule { }
 ```
 Sử dụng `Metadata` là `@NgModule` và sẽ có 3 options như sau
-*   imports: Sử dụng để thêm các module. BrowserModule là mặc định cho mọi ứng dụng trên web.
-*   declarations: Định nghĩa các component trong module tương ứng
-*   bootstrap: Định nghĩa những thành phần nào sử dụng bootstrap trong ứng dụng.
+*   imports: 
+*   declarations:
+*   bootstrap: 
 
 Ngoài ra không chỉ có 3 options trên mà ta còn có các options như providers, entryComponent được sử dụng trong dynamic component.
 # Metadata
